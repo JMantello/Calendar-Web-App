@@ -1,0 +1,166 @@
+﻿@model CreateAppointmentVM;
+
+@{
+    var minDate = DateTime.Now;
+}
+
+@*<style>
+    .e-calendar {
+    background-color: aliceblue;
+    border: 2px solid gray;
+}
+</style>*@
+
+<div class="container py-4 m-auto">
+
+    <div class="row pb-4">
+        <p class="lead">Meet with Lisa Mantello</p>
+    </div>
+
+    <div class="row justify-content-center">
+        @*Left side: Calender*@
+        <div class="col-md-5 pb-4">
+            <form>
+                <ejs-calendar id="calendar"
+                              min="minDate"
+                              class="m-auto e-bigger"
+                              change="getDateSelection"></ejs-calendar>
+            </form>
+        </div>
+
+        @*Right side: Time Selector*@
+        <div class="col-md-7 px-4">
+            <div class="container">
+                @*Meeting Length Selector*@
+                <p class="row">How long is the meeting?</p>
+
+                <div class="row btn-group btn-group-toggle d-flex justify-content-center"
+                     data-toggle="buttons"
+                     for="durationSelection">
+                    <label class="btn btn-secondary active">
+                        <input type="radio" name="durationOption" value="15" id="btn-15-mins" checked onchange="renderTimeslots()"> 15 mins
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" name="durationOption" value="30" id="btn-30-mins" onchange="renderTimeslots()"> 30 mins
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" name="durationOption" value="60" id="btn-1-hour" onchange="renderTimeslots()"> 1 hour
+                    </label>
+                </div>
+
+                @*Time Selector*@
+                <p class="row pt-4">What time works best?</p>
+
+                <div class="row list-group" id="timeslots">
+                    @* Template
+                    <a href="#" class="list-group-item list-group-item-action text-center">8:00 AM</a>
+                    <a href="#" class="list-group-item list-group-item-action text-center">8:15 AM</a>
+                    <a href="#" class="list-group-item list-group-item-action text-center">8:30 AM</a>*@
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Can get Model here by:
+    // var customers = '@Html.Raw(Json.Serialize(Model))';
+    // var customerList = JSON.parse(customers);
+
+    let timeslotsElem = null;
+    let model = null;
+    let usersAvailability = null;
+    let dateSelection = null;
+    let durationValue = null;
+
+    window.onload = (event) => {
+        timeslotsElem = document.getElementById("timeslots");
+        model = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+        usersAvailability = model.user.usersAvailability;
+        dateSelection = getToday();
+        getDurationValue();
+        renderTimeslots();
+    };
+
+    function getToday() {
+        let today = new Date();
+        let yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1; // Months start at 0!
+        let dd = today.getDate();
+
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+
+        today = mm + '/' + dd + '/' + yyyy;
+
+        return today;
+    }
+
+    function getDateSelection(args) {
+        var intl = new ej.base.Internationalization();
+        var value = intl.formatDate(args.value, { type: 'dateTime', format: 'dd/MM/yyyy' });
+        dateSelection = reformatDate(value);
+        renderTimeslots();
+    }
+    
+    function reformatDate(date) {
+        // dd/MM/yyyy --> MM/dd/yyyy
+        const [day, month, year] = date.split('/');
+        const result = [month, day, year].join('/');
+        return result;
+    }
+
+    function toDateObj(dateIn) {
+        return new Date(Date.parse(dateIn));
+    }
+    
+    function getDurationValue() {
+        durationValue = document.querySelector('input[name="durationOption"]:checked').value;
+    }
+
+    function renderTimeslots() {
+        getDurationValue();
+        timeslotsElem.textContent = "";
+
+        //  dateSelection.DayOfWeek
+        var availableTimes = Array.from(usersAvailability).filter(ua => ua.dayOfWeek == toDateObj(dateSelection).getDay());
+        if (availableTimes.length == 0) {
+            timeslotsElem.innerText = "No available times today.";
+        }
+        else {
+            availableTimes.forEach(a => {
+                // Convert date inputs to date object
+                let startDateString = dateSelection + " " + a.startTime;
+                let endDateString = dateSelection + " " + a.endTime;
+
+                let startDateTime = new Date(Date.parse(startDateString));
+                let endDateTime = new Date(Date.parse(endDateString));
+
+                let counter = startDateTime;
+
+                // Count through startTime to endTime
+                while (counter < endDateTime) {
+                    let timeOption = document.createElement("a");
+
+                    timeOption.classList.add("list-group-item");
+                    timeOption.classList.add("list-group-item-action");
+                    timeOption.classList.add("text-center");
+
+                    let displayTime = (counter.toLocaleString('en-US', {
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        hour12: true
+                    }));
+
+                    timeOption.innerText = displayTime;
+                    counter = new Date(counter.getTime() + durationValue * 60000);
+                    timeslotsElem.appendChild(timeOption);
+                }
+            });
+        }
+    }
+
+</script>
+
