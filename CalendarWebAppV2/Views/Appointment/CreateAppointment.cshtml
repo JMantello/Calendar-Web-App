@@ -14,7 +14,7 @@
 <div class="container py-4 m-auto">
 
     <div class="row pb-4">
-        <p class="lead">Meet with Lisa Mantello</p>
+        <p class="lead">Meet with @Model.User.FirstName @Model.User.LastName</p>
     </div>
 
     <div class="row justify-content-center">
@@ -32,7 +32,7 @@
         <div class="col-md-7 px-4">
             <div class="container">
                 @*Meeting Length Selector*@
-                <p class="row">How long is the meeting?</p>
+                <h6 class="row pb-3">Duration:</h6>
 
                 <div class="row btn-group btn-group-toggle d-flex justify-content-center"
                      data-toggle="buttons"
@@ -49,7 +49,7 @@
                 </div>
 
                 @*Time Selector*@
-                <p class="row pt-4">What time works best?</p>
+                <h6 class="row pt-4 pb-2">Available Time Slots:</h6>
 
                 <div class="row list-group" id="timeslots">
                     @* Template
@@ -74,6 +74,7 @@
     let usersAvailability = null;
     let dateSelection = null;
     let durationValue = null;
+    let DateTime = luxon.DateTime;
 
     window.onload = (event) => {
         timeslotsElem = document.getElementById("timeslots");
@@ -104,7 +105,7 @@
         dateSelection = reformatDate(value);
         renderTimeslots();
     }
-    
+
     function reformatDate(date) {
         // dd/MM/yyyy --> MM/dd/yyyy
         const [day, month, year] = date.split('/');
@@ -115,7 +116,7 @@
     function toDateObj(dateIn) {
         return new Date(Date.parse(dateIn));
     }
-    
+
     function getDurationValue() {
         durationValue = document.querySelector('input[name="durationOption"]:checked').value;
     }
@@ -124,24 +125,34 @@
         getDurationValue();
         timeslotsElem.textContent = "";
 
-        //  dateSelection.DayOfWeek
+        let usersAppointments = model.appointments;
+        let sameDayAppointments = [];
+
+        // Find same day appointments
+        usersAppointments.forEach(a => {
+            let appointmentStart = DateTime.now();
+            console.log(appointmentStart);
+        })
+
+        //  Find user's availability for selected date
         var availableTimes = Array.from(usersAvailability).filter(ua => ua.dayOfWeek == toDateObj(dateSelection).getDay());
-        if (availableTimes.length == 0) {
-            timeslotsElem.innerText = "No available times today.";
-        }
+        if (availableTimes.length == 0) { timeslotsElem.innerText = "No available times today."; }
         else {
             availableTimes.forEach(a => {
                 // Convert date inputs to date object
                 let startDateString = dateSelection + " " + a.startTime;
                 let endDateString = dateSelection + " " + a.endTime;
 
-                let startDateTime = new Date(Date.parse(startDateString));
-                let endDateTime = new Date(Date.parse(endDateString));
+                let startDateTime = toDateObj(startDateString);
+                let endDateTime = toDateObj(endDateString);
 
                 let counter = startDateTime;
 
-                // Count through startTime to endTime
+                // "Build" the timeslots - Count through startTime to endTime
                 while (counter < endDateTime) {
+                    // Check for appointment conflicts
+                    
+                    // Create Available Timeslot
                     let timeOption = document.createElement("a");
 
                     timeOption.classList.add("list-group-item");
@@ -155,6 +166,7 @@
                     }));
 
                     timeOption.innerText = displayTime;
+                    // Increase counter
                     counter = new Date(counter.getTime() + durationValue * 60000);
                     timeslotsElem.appendChild(timeOption);
                 }
