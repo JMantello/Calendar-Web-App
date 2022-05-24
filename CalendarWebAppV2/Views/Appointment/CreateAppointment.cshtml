@@ -51,13 +51,11 @@
                 @*Time Selector*@
                 <h6 class="row pt-4 pb-2">Available Time Slots:</h6>
 
-                <div class="scrollable overflow-auto">
-                    <div class="row list-group " id="timeslots">
-                        @* Template
-                        <a href="#" class="list-group-item list-group-item-action text-center">8:00 AM</a>
-                        <a href="#" class="list-group-item list-group-item-action text-center">8:15 AM</a>
-                        <a href="#" class="list-group-item list-group-item-action text-center">8:30 AM</a>*@
-                    </div>
+                <div class="row list-group " id="timeslots">
+                    @* Template
+                    <a href="#" class="list-group-item list-group-item-action text-center">8:00 AM</a>
+                    <a href="#" class="list-group-item list-group-item-action text-center">8:15 AM</a>
+                    <a href="#" class="list-group-item list-group-item-action text-center">8:30 AM</a>*@
                 </div>
 
             </div>
@@ -139,6 +137,7 @@
             dateSelection.toLocaleString() == toLuxon(appointment.end).toLocaleString()
         );
 
+        // Render timeslots
         if (daysAvailability.length == 0) { timeslotsElem.innerText = "No available times today."; }
         else {
             daysAvailability.forEach(da => {
@@ -153,9 +152,16 @@
 
                 // "Build" the timeslots - Count through startTime to endTime
                 while (counter < endDateTime) {
+                    
                     // Check for appointment conflicts
                     sameDayAppointments.forEach(appointment => {
+                        let appointmentStart = toLuxon(appointment.start);
+                        let appointmentEnd = toLuxon(appointment.end);
 
+                        // Fast forward >> the counter to end of appointment if conflict
+                        while (appointmentStart <= counter && counter < appointmentEnd) {
+                            counter = counter.plus({ minutes: durationValue });
+                        }
                     });
 
                     // Create HTML for Available Timeslot
