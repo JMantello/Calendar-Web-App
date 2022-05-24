@@ -24,14 +24,14 @@ namespace CalendarWebAppV2.Controllers
         // Would like to be able to direct to users profile like:
         // calendarwebapp.com/jonathanmantello
         // (Like linkedin.com/jonathanmantello) 
-        public IActionResult CreateAppointment(int id)
+        public IActionResult CreateAppointment(int userId)
         {
             CreateAppointmentVM model = new CreateAppointmentVM();
 
             // Get user
             Users user = context.Users
                 .Include(u => u.UsersAvailability)
-                .SingleOrDefault(u => u.Id == id);
+                .SingleOrDefault(u => u.Id == userId);
 
             if (user == null) return NotFound();
             model.User = user;

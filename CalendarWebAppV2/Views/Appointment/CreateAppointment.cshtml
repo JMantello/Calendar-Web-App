@@ -51,11 +51,13 @@
                 @*Time Selector*@
                 <h6 class="row pt-4 pb-2">Available Time Slots:</h6>
 
-                <div class="row list-group" id="timeslots">
-                    @* Template
-                    <a href="#" class="list-group-item list-group-item-action text-center">8:00 AM</a>
-                    <a href="#" class="list-group-item list-group-item-action text-center">8:15 AM</a>
-                    <a href="#" class="list-group-item list-group-item-action text-center">8:30 AM</a>*@
+                <div class="scrollable overflow-auto">
+                    <div class="row list-group " id="timeslots">
+                        @* Template
+                        <a href="#" class="list-group-item list-group-item-action text-center">8:00 AM</a>
+                        <a href="#" class="list-group-item list-group-item-action text-center">8:15 AM</a>
+                        <a href="#" class="list-group-item list-group-item-action text-center">8:30 AM</a>*@
+                    </div>
                 </div>
 
             </div>
@@ -65,44 +67,27 @@
 </div>
 
 <script>
-    // Can get Model here by:
-    // var customers = '@Html.Raw(Json.Serialize(Model))';
-    // var customerList = JSON.parse(customers);
-
-    let timeslotsElem = null;
     let model = null;
-    let usersAvailability = null;
+    let appointments = null;
+    let availability = null;
+    let timeslotsElem = null;
     let dateSelection = null;
     let durationValue = null;
     let DateTime = luxon.DateTime;
 
     window.onload = (event) => {
-        timeslotsElem = document.getElementById("timeslots");
         model = JSON.parse('@Html.Raw(Json.Serialize(Model))');
-        usersAvailability = model.user.usersAvailability;
-        dateSelection = getToday();
-        getDurationValue();
+        appointments = model.appointments;
+        availability = model.user.usersAvailability;
+        timeslotsElem = document.getElementById("timeslots");
+        dateSelection = DateTime.now();
         renderTimeslots();
     };
-
-    function getToday() {
-        let today = new Date();
-        let yyyy = today.getFullYear();
-        let mm = today.getMonth() + 1; // Months start at 0!
-        let dd = today.getDate();
-
-        if (dd < 10) dd = '0' + dd;
-        if (mm < 10) mm = '0' + mm;
-
-        today = mm + '/' + dd + '/' + yyyy;
-
-        return today;
-    }
 
     function getDateSelection(args) {
         var intl = new ej.base.Internationalization();
         var value = intl.formatDate(args.value, { type: 'dateTime', format: 'dd/MM/yyyy' });
-        dateSelection = reformatDate(value);
+        dateSelection = DateTime.fromFormat(value, 'dd/MM/yyyy');
         renderTimeslots();
     }
 
@@ -113,8 +98,22 @@
         return result;
     }
 
-    function toDateObj(dateIn) {
-        return new Date(Date.parse(dateIn));
+    function toLuxon(dateIn) {
+        let parsedDate = DateTime.fromISO(dateIn);
+
+        if (!parsedDate.isValid) {
+            parsedDate = DateTime.fromFormat(dateIn, "MM/dd/yyyy");
+        }
+
+        if (!parsedDate.isValid) {
+            parsedDate = DateTime.fromFormat(dateIn, "M/dd/yyyy");
+        }
+
+        if (!parsedDate.isValid) {
+            parsedDate = "Non-valid date - from toLuxon";
+        }
+
+        return parsedDate;
     }
 
     function getDurationValue() {
@@ -122,52 +121,58 @@
     }
 
     function renderTimeslots() {
-        getDurationValue();
+        // Clear timeslots section
         timeslotsElem.textContent = "";
 
-        let usersAppointments = model.appointments;
+        // Get duration
+        getDurationValue();
+
+        // Get day's availability
+        let daysAvailability = availability.filter(a => a.dayOfWeek == dateSelection.weekday);
+
+        // Get appointments within day
         let sameDayAppointments = [];
 
-        // Find same day appointments
-        usersAppointments.forEach(a => {
-            let appointmentStart = DateTime.now();
-            console.log(appointmentStart);
-        })
+        sameDayAppointments = appointments.filter(appointment =>
+            dateSelection.toLocaleString() == toLuxon(appointment.start).toLocaleString()
+            ||
+            dateSelection.toLocaleString() == toLuxon(appointment.end).toLocaleString()
+        );
 
-        //  Find user's availability for selected date
-        var availableTimes = Array.from(usersAvailability).filter(ua => ua.dayOfWeek == toDateObj(dateSelection).getDay());
-        if (availableTimes.length == 0) { timeslotsElem.innerText = "No available times today."; }
+        if (daysAvailability.length == 0) { timeslotsElem.innerText = "No available times today."; }
         else {
-            availableTimes.forEach(a => {
+            daysAvailability.forEach(da => {
                 // Convert date inputs to date object
-                let startDateString = dateSelection + " " + a.startTime;
-                let endDateString = dateSelection + " " + a.endTime;
+                let startDateString = dateSelection.toISODate() + "T" + da.startTime;
+                let endDateString = dateSelection.toISODate() + "T" + da.endTime;
 
-                let startDateTime = toDateObj(startDateString);
-                let endDateTime = toDateObj(endDateString);
+                let startDateTime = toLuxon(startDateString);
+                let endDateTime = toLuxon(endDateString);
 
                 let counter = startDateTime;
 
                 // "Build" the timeslots - Count through startTime to endTime
                 while (counter < endDateTime) {
                     // Check for appointment conflicts
-                    
-                    // Create Available Timeslot
+                    sameDayAppointments.forEach(appointment => {
+
+                    });
+
+                    // Create HTML for Available Timeslot
                     let timeOption = document.createElement("a");
 
                     timeOption.classList.add("list-group-item");
                     timeOption.classList.add("list-group-item-action");
                     timeOption.classList.add("text-center");
 
-                    let displayTime = (counter.toLocaleString('en-US', {
-                        hour: 'numeric',
-                        minute: 'numeric',
-                        hour12: true
-                    }));
+                    let displayTime = counter.toLocaleString(DateTime.TIME_SIMPLE);
 
                     timeOption.innerText = displayTime;
+
                     // Increase counter
-                    counter = new Date(counter.getTime() + durationValue * 60000);
+                    counter = counter.plus({ minutes: durationValue });
+
+                    // Append timeslot element
                     timeslotsElem.appendChild(timeOption);
                 }
             });
