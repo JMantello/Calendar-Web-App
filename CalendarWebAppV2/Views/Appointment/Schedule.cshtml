@@ -13,19 +13,17 @@
 
 <div class="container py-4 m-auto">
 
-    <div class="row pb-4">
-        <p class="lead">Meet with @Model.User.FirstName @Model.User.LastName</p>
-    </div>
+    <p class="lead"><strong>Meeting with @Model.User.FirstName @Model.User.LastName</strong></p>
+
+    <hr class="pb-4" />
 
     <div class="row justify-content-center">
         @*Left side: Calender*@
         <div class="col-md-5 pb-4">
-            <form>
-                <ejs-calendar id="calendar"
-                              min="minDate"
-                              class="m-auto e-bigger"
-                              change="getDateSelection"></ejs-calendar>
-            </form>
+            <ejs-calendar id="calendar"
+                          min="minDate"
+                          class="m-auto e-bigger"
+                          change="getDateSelection"></ejs-calendar>
         </div>
 
         @*Right side: Time Selector*@
@@ -51,12 +49,14 @@
                 @*Time Selector*@
                 <h6 class="row pt-4 pb-2">Available Time Slots:</h6>
 
-                <div class="row list-group " id="timeslots">
-                    @* Template
-                    <a href="#" class="list-group-item list-group-item-action text-center">8:00 AM</a>
-                    <a href="#" class="list-group-item list-group-item-action text-center">8:15 AM</a>
-                    <a href="#" class="list-group-item list-group-item-action text-center">8:30 AM</a>*@
-                </div>
+                <form id="dateTimeForm" asp-controller="Appointment" asp-action="Schedule" method="post">
+                    <div class="row list-group " id="timeslots">
+                        @* Template
+                        <a href="#" class="list-group-item list-group-item-action text-center">8:00 AM</a>
+                        <a href="#" class="list-group-item list-group-item-action text-center">8:15 AM</a>
+                        <a href="#" class="list-group-item list-group-item-action text-center">8:30 AM</a>*@
+                    </div>
+                </form>
 
             </div>
         </div>
@@ -137,22 +137,50 @@
             dateSelection.toLocaleString() == toLuxon(appointment.end).toLocaleString()
         );
 
-        // Render timeslots
+        // Render timeslots HTML
         if (daysAvailability.length == 0) { timeslotsElem.innerText = "No available times today."; }
         else {
+            // Create hidden userId input
+            let userIdInputElem = document.createElement("input");
+            userIdInputElem.setAttribute("name", "userId");
+            userIdInputElem.setAttribute("value", model.user.id);
+            userIdInputElem.setAttribute("hidden", "true");
+            timeslotsElem.appendChild(userIdInputElem);
+
+            // Create hidden date input element
+            let dateInputElem = document.createElement("input");
+            dateInputElem.setAttribute("id", "dateTimeInput");
+            dateInputElem.setAttribute("name", "dateTimeSelection");
+            dateInputElem.setAttribute("value", "");
+            dateInputElem.setAttribute("hidden", "true");
+            timeslotsElem.appendChild(dateInputElem);
+
+            // Create hidden duration input element
+            let durationInputElem = document.createElement("input");
+            durationInputElem.setAttribute("id", "durationInput");
+            durationInputElem.setAttribute("name", "duration");
+            durationInputElem.setAttribute("value", durationValue);
+            durationInputElem.setAttribute("hidden", "true");
+            timeslotsElem.appendChild(durationInputElem);
+
+            // Create timeslots for each entry in users availability
             daysAvailability.forEach(da => {
                 // Convert date inputs to date object
                 let startDateString = dateSelection.toISODate() + "T" + da.startTime;
                 let endDateString = dateSelection.toISODate() + "T" + da.endTime;
-
                 let startDateTime = toLuxon(startDateString);
                 let endDateTime = toLuxon(endDateString);
 
                 let counter = startDateTime;
 
+                /*  Still need to do:
+                     -Set start time to only render timeslots from today onward, no past times
+                     -Check case where duration is 1hr but start time is not on the hour
+                */
+
                 // "Build" the timeslots - Count through startTime to endTime
                 while (counter < endDateTime) {
-                    
+
                     // Check for appointment conflicts
                     sameDayAppointments.forEach(appointment => {
                         let appointmentStart = toLuxon(appointment.start);
@@ -162,6 +190,12 @@
                         while (appointmentStart <= counter && counter < appointmentEnd) {
                             counter = counter.plus({ minutes: durationValue });
                         }
+
+                        // May want to check that we dont put out a timeslot that will conflict
+                        // with an existing appointment.
+
+                        // i.e -> making a 1 hour timeslot at 10:00AM that conflicts with
+                        // a 15 minute 10:45AM appointment
                     });
 
                     // Create HTML for Available Timeslot
@@ -170,9 +204,10 @@
                     timeOption.classList.add("list-group-item");
                     timeOption.classList.add("list-group-item-action");
                     timeOption.classList.add("text-center");
+                    timeOption.setAttribute("value", counter.toISO());
+                    timeOption.setAttribute("onclick", "submitForm(this)");
 
                     let displayTime = counter.toLocaleString(DateTime.TIME_SIMPLE);
-
                     timeOption.innerText = displayTime;
 
                     // Increase counter
@@ -183,6 +218,16 @@
                 }
             });
         }
+    }
+
+    function submitForm(sender) {
+        // Set dateTimeInput value from sender
+        let dateTimeInput = document.getElementById("dateTimeInput");
+        dateTimeInput.value = sender.getAttribute("value");
+
+        // Submit form
+        let dateTimeForm = document.getElementById("dateTimeForm");
+        dateTimeForm.submit();
     }
 
 </script>

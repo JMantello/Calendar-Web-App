@@ -3,6 +3,7 @@ using CalendarWebAppV2.Models;
 using CalendarWebAppV2.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 
 namespace CalendarWebAppV2.Controllers
@@ -24,7 +25,7 @@ namespace CalendarWebAppV2.Controllers
         // Would like to be able to direct to users profile like:
         // calendarwebapp.com/jonathanmantello
         // (Like linkedin.com/jonathanmantello) 
-        public IActionResult CreateAppointment(int userId)
+        public IActionResult Schedule(int userId)
         {
             CreateAppointmentVM model = new CreateAppointmentVM();
 
@@ -58,5 +59,12 @@ namespace CalendarWebAppV2.Controllers
 
             return View(model);
         }
+
+        [HttpPost]
+        public IActionResult Schedule(int userId, DateTime dateTimeSelection, int duration)
+        {
+            return Content($"{userId} - {dateTimeSelection} - {duration}");
+        }
+
     }
 }
