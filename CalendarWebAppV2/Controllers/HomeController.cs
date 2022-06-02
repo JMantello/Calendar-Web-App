@@ -25,9 +25,9 @@ namespace CalendarWebAppV2.Controllers
         
         public IActionResult Index()
         {
-            //return View();
+            return View();
             //return RedirectToAction("Index", "Users");
-            return RedirectToAction("Schedule", "Appointment", new { userId = 1 });
+            //return RedirectToAction("Schedule", "Appointment", new { userId = 1 });
         }
 
         public IActionResult Privacy()

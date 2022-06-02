@@ -6,27 +6,32 @@
 
 <style>
     .e-calendar {
-        background-color: whitesmoke;
-        /*border: 2px solid gray;*/
+        /*background-color: whitesmoke;
+        border: 2px solid gray;*/
     }
 
     .scrollable-height {
         height: 500px;
     }
 
-    .clickable {
+    .timeslot {
         cursor: pointer;
+        margin-bottom: 5px;
+        border-radius: 5px;
     }
+
+
 
 </style>
 
 <div class="container py-4 m-auto shadow border border-light rounded">
-    <h2 class="pb-2">Meeting with @Model.User.FirstName @Model.User.LastName</h2>
+    <h2 class="pb-2 lead">Meeting with @Model.User.FirstName @Model.User.LastName</h2>
     <hr class="pb-4"/>
 
     <div class="row justify-content-center">
         @*Left side: Calender*@
         <div class="col-md-5 pb-4">
+            <h6 class="pb-3">Date Selection:</h6>
             <ejs-calendar id="calendar"
                           min="minDate"
                           class="m-auto e-bigger"
@@ -53,11 +58,11 @@
             </div>
 
             @*Time Selector*@
-            <h6 class=" pt-4 pb-2">Available Time Slots:</h6>
+            <h6 class="pt-4 pb-2">Time Slots:</h6>
 
-            <div class="scrollable-height overflow-auto scrollbar-primary scrollbar scrollbar-night-fade">
+            <div class="scrollable-height overflow-auto scrollbar-primary pr-1">
                 <form id="dateTimeForm" asp-controller="Appointment" asp-action="Schedule" method="post">
-                    <div class="row list-group w-95 m-0" id="timeslots">
+                    <div class="row list-group w-95 m-0 text-center" id="timeslots">
                         @* Template
                         <a href="#" class="list-group-item list-group-item-action text-center">8:00 AM</a>
                         <a href="#" class="list-group-item list-group-item-action text-center">8:15 AM</a>
@@ -217,7 +222,7 @@
                     timeOption.classList.add("list-group-item");
                     timeOption.classList.add("list-group-item-action");
                     timeOption.classList.add("text-center");
-                    timeOption.classList.add("clickable");
+                    timeOption.classList.add("timeslot");
                     timeOption.setAttribute("value", dayCounter.toISO());
                     timeOption.setAttribute("onclick", "submitForm(this)");
 
