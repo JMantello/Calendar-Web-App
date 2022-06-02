@@ -1,21 +1,28 @@
-﻿@model CreateAppointmentVM;
+﻿@model ScheduleVM;
 
 @{
-    var minDate = DateTime.Now;
+    var minDate = DateTimeOffset.Now;
 }
 
-@*<style>
+<style>
     .e-calendar {
-    background-color: aliceblue;
-    border: 2px solid gray;
-}
-</style>*@
+        background-color: whitesmoke;
+        /*border: 2px solid gray;*/
+    }
 
-<div class="container py-4 m-auto">
+    .scrollable-height {
+        height: 500px;
+    }
 
-    <p class="lead"><strong>Meeting with @Model.User.FirstName @Model.User.LastName</strong></p>
+    .clickable {
+        cursor: pointer;
+    }
 
-    <hr class="pb-4" />
+</style>
+
+<div class="container py-4 m-auto shadow border border-light rounded">
+    <h2 class="pb-2">Meeting with @Model.User.FirstName @Model.User.LastName</h2>
+    <hr class="pb-4"/>
 
     <div class="row justify-content-center">
         @*Left side: Calender*@
@@ -28,36 +35,35 @@
 
         @*Right side: Time Selector*@
         <div class="col-md-7 px-4">
-            <div class="container">
-                @*Meeting Length Selector*@
-                <h6 class="row pb-3">Duration:</h6>
+            @*Meeting Length Selector*@
+            <h6 class="pb-3">Duration:</h6>
 
-                <div class="row btn-group btn-group-toggle d-flex justify-content-center"
-                     data-toggle="buttons"
-                     for="durationSelection">
-                    <label class="btn btn-secondary active">
-                        <input type="radio" name="durationOption" value="15" id="btn-15-mins" checked onchange="renderTimeslots()"> 15 mins
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" name="durationOption" value="30" id="btn-30-mins" onchange="renderTimeslots()"> 30 mins
-                    </label>
-                    <label class="btn btn-secondary">
-                        <input type="radio" name="durationOption" value="60" id="btn-1-hour" onchange="renderTimeslots()"> 1 hour
-                    </label>
-                </div>
+            <div class="btn-group btn-group-toggle d-flex justify-content-center"
+                 data-toggle="buttons"
+                 for="durationSelection">
+                <label class="btn btn-secondary active">
+                    <input type="radio" name="durationOption" value="15" id="btn-15-mins" checked onchange="renderTimeslots()"> 15 mins
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="durationOption" value="30" id="btn-30-mins" onchange="renderTimeslots()"> 30 mins
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="durationOption" value="60" id="btn-60-mins" onchange="renderTimeslots()"> 60 mins
+                </label>
+            </div>
 
-                @*Time Selector*@
-                <h6 class="row pt-4 pb-2">Available Time Slots:</h6>
+            @*Time Selector*@
+            <h6 class=" pt-4 pb-2">Available Time Slots:</h6>
 
+            <div class="scrollable-height overflow-auto scrollbar-primary scrollbar scrollbar-night-fade">
                 <form id="dateTimeForm" asp-controller="Appointment" asp-action="Schedule" method="post">
-                    <div class="row list-group " id="timeslots">
+                    <div class="row list-group w-95 m-0" id="timeslots">
                         @* Template
                         <a href="#" class="list-group-item list-group-item-action text-center">8:00 AM</a>
                         <a href="#" class="list-group-item list-group-item-action text-center">8:15 AM</a>
                         <a href="#" class="list-group-item list-group-item-action text-center">8:30 AM</a>*@
                     </div>
                 </form>
-
             </div>
         </div>
     </div>
@@ -138,7 +144,7 @@
         );
 
         // Render timeslots HTML
-        if (daysAvailability.length == 0) { timeslotsElem.innerText = "No available times today."; }
+        if (daysAvailability.length == 0) { timeslotsElem.innerText = "No available times."; }
         else {
             // Create hidden userId input
             let userIdInputElem = document.createElement("input");
@@ -171,15 +177,24 @@
                 let startDateTime = toLuxon(startDateString);
                 let endDateTime = toLuxon(endDateString);
 
-                let counter = startDateTime;
+                let dayCounter = startDateTime;
+                let now = DateTime.now();
 
-                /*  Still need to do:
-                     -Set start time to only render timeslots from today onward, no past times
+                if (dayCounter.toISODate() == now.toISODate()) {
+                    // Advance counter to current time, ensuring no past times are generated
+                    while (dayCounter < now) {
+                        dayCounter = dayCounter.plus({ minutes: durationValue });
+                    }
+                }
+
+                /*  Unaddressed cases:
                      -Check case where duration is 1hr but start time is not on the hour
                 */
 
-                // "Build" the timeslots - Count through startTime to endTime
-                while (counter < endDateTime) {
+                // Generate the timeslots
+                let timeslots = [];
+
+                while (dayCounter < endDateTime) {
 
                     // Check for appointment conflicts
                     sameDayAppointments.forEach(appointment => {
@@ -187,35 +202,44 @@
                         let appointmentEnd = toLuxon(appointment.end);
 
                         // Fast forward >> the counter to end of appointment if conflict
-                        while (appointmentStart <= counter && counter < appointmentEnd) {
-                            counter = counter.plus({ minutes: durationValue });
+                        while (appointmentStart <= dayCounter && dayCounter < appointmentEnd) {
+                            dayCounter = dayCounter.plus({ minutes: durationValue });
                         }
 
-                        // May want to check that we dont put out a timeslot that will conflict
-                        // with an existing appointment.
-
+                        // Are we checking so that we don't put out a timeslot that will conflict
+                        // with an existing appointment?
                         // i.e -> making a 1 hour timeslot at 10:00AM that conflicts with
                         // a 15 minute 10:45AM appointment
                     });
 
                     // Create HTML for Available Timeslot
                     let timeOption = document.createElement("a");
-
                     timeOption.classList.add("list-group-item");
                     timeOption.classList.add("list-group-item-action");
                     timeOption.classList.add("text-center");
-                    timeOption.setAttribute("value", counter.toISO());
+                    timeOption.classList.add("clickable");
+                    timeOption.setAttribute("value", dayCounter.toISO());
                     timeOption.setAttribute("onclick", "submitForm(this)");
 
-                    let displayTime = counter.toLocaleString(DateTime.TIME_SIMPLE);
+                    let displayTime = dayCounter.toLocaleString(DateTime.TIME_SIMPLE);
                     timeOption.innerText = displayTime;
 
                     // Increase counter
-                    counter = counter.plus({ minutes: durationValue });
+                    dayCounter = dayCounter.plus({ minutes: durationValue });
 
-                    // Append timeslot element
-                    timeslotsElem.appendChild(timeOption);
+                    // Push timeslot element
+                    timeslots.push(timeOption);
                 }
+
+                // Append timeslots or empty message
+                if (timeslots.length == 0) {
+                    timeslotsElem.innerText = "No available times.";
+                } else {
+                    timeslots.forEach(timeOption => {
+                        timeslotsElem.appendChild(timeOption);
+                    });
+                }
+
             });
         }
     }

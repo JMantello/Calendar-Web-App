@@ -1,0 +1,46 @@
+﻿@model AppointmentsVM
+
+
+@if (Model.Appointments.Count == 0)
+{
+    <div class="text-center">
+        <h2 class="display-4">No upcoming appointments.</h2>
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h2 class="display-4 pb-4">Your upcoming appointments...</h2>
+    </div>
+}
+
+@foreach (DateTimeOffset date in @Model.Appointments.Select(a => a.Start).Distinct().OrderBy(d => d))
+{
+    Console.WriteLine(date);
+    <h2>@date.ToString("dddd, MMMM dd")</h2>
+    <hr />
+
+    @foreach (Appointments appointment in Model.Appointments)
+    {
+        @if (date == appointment.Start)
+        {
+            <div class="p-3">
+                <p class="">@appointment.Start.ToString("h:mm tt") - @appointment.End.ToString("h:mm tt")</p>
+                <p>Participants:</p>
+                @foreach(AppointmentParticipants participant in appointment.AppointmentParticipants)
+                {
+                    <p>Appointment with: @participant.User.FirstName @participant.User.LastName</p>
+                    <p>Appointment with: @participant.User.Email @participant.User.Phone</p>
+                }
+                <p>Memo:</p>
+                <p>@appointment.Memo</p>
+                <a class="lead" asp-action="DeleteAppointment" asp-route-id="@appointment.Id">
+                    Delete Appointment
+                </a>
+            </div>
+        }
+    }
+}
+
+<hr />
+<p>End of list.</p>

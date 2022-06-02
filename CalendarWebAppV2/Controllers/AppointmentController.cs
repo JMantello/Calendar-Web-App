@@ -27,7 +27,7 @@ namespace CalendarWebAppV2.Controllers
         // (Like linkedin.com/jonathanmantello) 
         public IActionResult Schedule(int userId)
         {
-            CreateAppointmentVM model = new CreateAppointmentVM();
+            ScheduleVM model = new ScheduleVM();
 
             // Get user
             Users user = context.Users
@@ -61,9 +61,85 @@ namespace CalendarWebAppV2.Controllers
         }
 
         [HttpPost]
-        public IActionResult Schedule(int userId, DateTime dateTimeSelection, int duration)
+        public IActionResult Schedule(int userId, DateTimeOffset dateTimeSelection, int duration)
         {
-            return Content($"{userId} - {dateTimeSelection} - {duration}");
+            // Declare model
+            EnterDetailsVM model = new EnterDetailsVM();
+
+            // Get user
+            Users user = context.Users
+                .Include(u => u.UsersAvailability)
+                .SingleOrDefault(u => u.Id == userId);
+
+            if (user == null) return NotFound();
+
+            model.User = user;
+            model.DateTimeSelection = dateTimeSelection;
+            model.Duration = duration;
+
+            return View("EnterDetails", model);
+        }
+
+        [HttpPost]
+        public IActionResult EnterDetails(EnterDetailsVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // Get user
+            Users user = context.Users
+                .Include(u => u.UsersAvailability)
+                .SingleOrDefault(u => u.Id == model.UserId);
+
+            if (user == null) return NotFound();
+
+            // Get participant
+            Users participant = context.Users.SingleOrDefault(u => u.Email == model.ParticipantEmail);
+
+            if (participant == null)
+            {
+                // Create new user
+                participant = new Users();
+
+                participant.FirstName = model.ParticipantFirstName;
+                participant.Email = model.ParticipantEmail;
+
+                if (!string.IsNullOrEmpty(model.ParticipantLastName))
+                {
+                    participant.LastName = model.ParticipantLastName;
+                }
+
+                if (!string.IsNullOrEmpty(model.ParticipantPhone))
+                {
+                    participant.Phone = model.ParticipantPhone;
+                }
+
+                // Add new user to database
+            }
+
+            // Create new appointment
+            Appointments appointment = new Appointments();
+            
+            DateTimeOffset appointmentStart = model.DateTimeSelection;
+            DateTimeOffset appointmentEnd = model.DateTimeSelection.AddMinutes(model.Duration);
+
+            appointment.Start = appointmentStart;
+            appointment.End = appointmentEnd;
+
+            if(!string.IsNullOrEmpty(model.Memo))
+            {
+                appointment.Memo = model.Memo;
+            }
+
+            // ?
+            // Add user as host
+            // Add participant as participant
+
+
+
+            return Json(model);
         }
 
     }

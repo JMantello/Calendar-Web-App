@@ -19,13 +19,17 @@ namespace CalendarWebAppV2.Models
 
         [Key]
         public int Id { get; set; }
+
         public DateTimeOffset Start { get; set; }
+
         public DateTimeOffset End { get; set; }
+
         [StringLength(300)]
         public string Memo { get; set; }
 
         [InverseProperty("Appointment")]
         public virtual ICollection<AppointmentHosts> AppointmentHosts { get; set; }
+
         [InverseProperty("Appointment")]
         public virtual ICollection<AppointmentParticipants> AppointmentParticipants { get; set; }
     }
