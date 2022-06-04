@@ -1,6 +1,7 @@
 ﻿using CalendarWebAppV2.Data;
 using CalendarWebAppV2.Models;
-using CalendarWebAppV2.Models.ViewModels;
+using CalendarWebAppV2.Models.HomeViewModels;
+using CalendarWebAppV2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -25,9 +26,11 @@ namespace CalendarWebAppV2.Controllers
         
         public IActionResult Index()
         {
-            return View();
-            //return RedirectToAction("Index", "Users");
-            //return RedirectToAction("Schedule", "Appointment", new { userId = 1 });
+            //return RedirectToAction("Schedule", "Appointments", new { hostId = 1 });
+
+            IndexVM model = new IndexVM();
+            model.Hosts = context.Hosts.ToList();
+            return View(model);
         }
 
         public IActionResult Privacy()

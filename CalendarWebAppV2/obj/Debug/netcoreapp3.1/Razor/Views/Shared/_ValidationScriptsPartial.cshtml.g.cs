@@ -14,34 +14,48 @@ namespace AspNetCore
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
 #nullable restore
 #line 1 "C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\Views\_ViewImports.cshtml"
-using CalendarWebAppV2;
+using CalendarWebAppV2.Models.EntityModels;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 2 "C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\Views\_ViewImports.cshtml"
-using CalendarWebAppV2.Models;
+using CalendarWebAppV2.Models.AppointmentsViewModels;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 3 "C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\Views\_ViewImports.cshtml"
-using Syncfusion.EJ2;
+using CalendarWebAppV2.Models.HostsViewModels;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 8 "C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\Views\_ViewImports.cshtml"
-using CalendarWebAppV2.Models.ViewModels;
+#line 4 "C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\Views\_ViewImports.cshtml"
+using CalendarWebAppV2.Models;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 5 "C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\Views\_ViewImports.cshtml"
+using CalendarWebAppV2;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 6 "C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\Views\_ViewImports.cshtml"
+using Syncfusion.EJ2;
 
 #line default
 #line hidden
 #nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"4b5e5ef4ebf7354cc35c7dacddd6bc3068f19a47", @"/Views/Shared/_ValidationScriptsPartial.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"5962a4aaaa04f4ef5084533827d7fbefbd9cb81e", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"21be704b08ada88943c1be63a6689527088d1175", @"/Views/_ViewImports.cshtml")]
     #nullable restore
     public class Views_Shared__ValidationScriptsPartial : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     #nullable disable
@@ -72,7 +86,7 @@ using CalendarWebAppV2.Models.ViewModels;
         #pragma warning disable 1998
         public async override global::System.Threading.Tasks.Task ExecuteAsync()
         {
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("script", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "4b5e5ef4ebf7354cc35c7dacddd6bc3068f19a474638", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("script", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "4b5e5ef4ebf7354cc35c7dacddd6bc3068f19a475157", async() => {
             }
             );
             __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper>();
@@ -86,7 +100,7 @@ using CalendarWebAppV2.Models.ViewModels;
             Write(__tagHelperExecutionContext.Output);
             __tagHelperExecutionContext = __tagHelperScopeManager.End();
             WriteLiteral("\r\n");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("script", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "4b5e5ef4ebf7354cc35c7dacddd6bc3068f19a475677", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("script", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "4b5e5ef4ebf7354cc35c7dacddd6bc3068f19a476196", async() => {
             }
             );
             __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper>();

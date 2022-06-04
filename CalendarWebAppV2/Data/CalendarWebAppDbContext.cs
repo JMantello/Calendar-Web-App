@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using CalendarWebAppV2.Models;
+using CalendarWebAppV2.Models.EntityModels;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
 // If you have enabled NRTs for your project, then un-comment the following line:
@@ -23,17 +23,9 @@ namespace CalendarWebAppV2.Data
         public virtual DbSet<AppointmentHosts> AppointmentHosts { get; set; }
         public virtual DbSet<AppointmentParticipants> AppointmentParticipants { get; set; }
         public virtual DbSet<Appointments> Appointments { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
-        public virtual DbSet<UsersAvailability> UsersAvailability { get; set; }
-
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-//                optionsBuilder.UseSqlServer("Data Source=JMANTELLO-DESKT\\SQLEXPRESS;Initial Catalog=CalendarWebAppDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-//            }
-//        }
+        public virtual DbSet<HostAvailability> HostAvailability { get; set; }
+        public virtual DbSet<Hosts> Hosts { get; set; }
+        public virtual DbSet<Participants> Participants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,9 +37,9 @@ namespace CalendarWebAppV2.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AppointmentHosts_To_Appointments");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.Host)
                     .WithMany(p => p.AppointmentHosts)
-                    .HasForeignKey(d => d.UserId)
+                    .HasForeignKey(d => d.HostId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AppointmentHost_To_Users");
             });
@@ -60,11 +52,11 @@ namespace CalendarWebAppV2.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_AppointmentParticipants_To_Appointments");
 
-                entity.HasOne(d => d.User)
+                entity.HasOne(d => d.Participant)
                     .WithMany(p => p.AppointmentParticipants)
-                    .HasForeignKey(d => d.UserId)
+                    .HasForeignKey(d => d.ParticipantId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_AppointmentParticipants_To_Users");
+                    .HasConstraintName("FK_AppointmentParticipants_To_Participants");
             });
 
             modelBuilder.Entity<Appointments>(entity =>
@@ -72,7 +64,33 @@ namespace CalendarWebAppV2.Data
                 entity.Property(e => e.Memo).IsUnicode(false);
             });
 
-            modelBuilder.Entity<Users>(entity =>
+            modelBuilder.Entity<HostAvailability>(entity =>
+            {
+                entity.HasOne(d => d.Host)
+                    .WithMany(p => p.HostAvailability)
+                    .HasForeignKey(d => d.HostId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_HostsAvailability_To_Hosts");
+            });
+
+            modelBuilder.Entity<Hosts>(entity =>
+            {
+                entity.Property(e => e.Bio).IsUnicode(false);
+
+                entity.Property(e => e.Email).IsUnicode(false);
+
+                entity.Property(e => e.FirstName).IsUnicode(false);
+
+                entity.Property(e => e.LastName).IsUnicode(false);
+
+                entity.Property(e => e.Phone).IsUnicode(false);
+
+                entity.Property(e => e.ProfileImage).IsUnicode(false);
+
+                entity.Property(e => e.UniqueEndpoint).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Participants>(entity =>
             {
                 entity.Property(e => e.Email).IsUnicode(false);
 
@@ -81,16 +99,6 @@ namespace CalendarWebAppV2.Data
                 entity.Property(e => e.LastName).IsUnicode(false);
 
                 entity.Property(e => e.Phone).IsUnicode(false);
-            });
-
-            modelBuilder.Entity<UsersAvailability>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.UsersAvailability)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_UsersAvailability_To_Users");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -1,6 +1,6 @@
 using System;
 
-namespace CalendarWebAppV2.Models
+namespace CalendarWebAppV2.ViewModels
 {
     public class ErrorViewModel
     {

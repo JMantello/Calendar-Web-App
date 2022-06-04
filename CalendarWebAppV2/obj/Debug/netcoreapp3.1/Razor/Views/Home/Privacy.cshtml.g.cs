@@ -14,34 +14,48 @@ namespace AspNetCore
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
 #nullable restore
 #line 1 "C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\Views\_ViewImports.cshtml"
-using CalendarWebAppV2;
+using CalendarWebAppV2.Models.EntityModels;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 2 "C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\Views\_ViewImports.cshtml"
-using CalendarWebAppV2.Models;
+using CalendarWebAppV2.Models.AppointmentsViewModels;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 3 "C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\Views\_ViewImports.cshtml"
-using Syncfusion.EJ2;
+using CalendarWebAppV2.Models.HostsViewModels;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 8 "C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\Views\_ViewImports.cshtml"
-using CalendarWebAppV2.Models.ViewModels;
+#line 4 "C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\Views\_ViewImports.cshtml"
+using CalendarWebAppV2.Models;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 5 "C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\Views\_ViewImports.cshtml"
+using CalendarWebAppV2;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 6 "C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\Views\_ViewImports.cshtml"
+using Syncfusion.EJ2;
 
 #line default
 #line hidden
 #nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"7f0ac79fc4e394e4223afd4b8ad2c737322ab1f2", @"/Views/Home/Privacy.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"5962a4aaaa04f4ef5084533827d7fbefbd9cb81e", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"21be704b08ada88943c1be63a6689527088d1175", @"/Views/_ViewImports.cshtml")]
     #nullable restore
     public class Views_Home_Privacy : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     #nullable disable

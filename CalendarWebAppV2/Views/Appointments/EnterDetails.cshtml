@@ -1,0 +1,55 @@
+﻿@model EnterDetailsVM;
+
+<h2>Scheduling An Appointment With @Model.Host.FirstName @Model.Host.LastName</h2>
+<form asp-action="EnterDetails" method="post">
+    <input hidden asp-for="HostId" />
+    <input hidden type="datetime" asp-for="DateTimeSelection" />
+    <input hidden asp-for="Duration" />
+
+    <div class="form-group">
+        <label class="control-label pt-1">Start time: @Model.DateTimeSelection.ToString("f")</label>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label">End time: @Model.EndTime.ToString("f")</label>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label">Duration: @Model.Duration minutes</label>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label">Your first name: </label>
+        <input asp-for="ParticipantFirstName" type="text" />
+        <span asp-validation-for="ParticipantFirstName" class="text-danger"></span>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label">Your last name (optional): </label>
+        <input asp-for="ParticipantLastName" type="text" />
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label">Your email address: </label>
+        <input asp-for="ParticipantEmail" type="text" />
+        <span asp-validation-for="ParticipantEmail" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">Your phone number (optional): </label>
+        <input asp-for="ParticipantPhone" type="text" />
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">Memo (Max 300 characters): </label>
+        <textarea asp-for="Memo" class="w-100" placeholder="Notes for the meeting..."></textarea>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Submit" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
