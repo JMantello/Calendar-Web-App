@@ -26,7 +26,7 @@ namespace CalendarWebAppV2.Controllers
         
         public IActionResult Index()
         {
-            //return RedirectToAction("Schedule", "Appointments", new { hostId = 1 });
+            return RedirectToAction("Schedule", "Appointments", new { hostId = 1 });
 
             IndexVM model = new IndexVM();
             model.Hosts = context.Hosts.ToList();

@@ -61,15 +61,14 @@ namespace CalendarWebAppV2.Controllers
         }
 
         [HttpPost]
-        public IActionResult Schedule(int userId, DateTimeOffset dateTimeSelection, int duration)
+        public IActionResult Schedule(int hostId, DateTimeOffset dateTimeSelection, int duration)
         {
             // Declare model
             EnterDetailsVM model = new EnterDetailsVM();
 
             // Get host
             Hosts host = context.Hosts
-                .Include(u => u.HostAvailability)
-                .SingleOrDefault(u => u.Id == userId);
+                .SingleOrDefault(h => h.Id == hostId);
 
             if (host == null) return NotFound();
 

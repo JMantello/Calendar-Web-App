@@ -2,35 +2,63 @@
 
 @{
     var minDate = DateTimeOffset.Now;
+    string hostName = Model.Host.FirstName + " " + Model.Host.LastName;
 }
 
 <style>
     .e-calendar {
-        background-color: white;
-        /*border: 2px solid gray;*/
+        /* background-color: white;*/
+        border: none;
+        padding: 10px;
     }
 
     .scrollable-height {
-        height: 500px;
+        height: 470px;
     }
 
     .timeslot {
         cursor: pointer;
         border-radius: 5px;
     }
+     
+    .timeslot:hover {
+        background-color: azure;
+    }
 
-
+    .rounded-top-left {
+        border-top-left-radius: 3px !important;
+    }
 
 </style>
+<br />
+<div class="card bg-light m-auto shadow rounded pb-2">
+    <div class="card-header p-0 ">
+        <div class="d-sm-flex">
+            @*Profile Image*@
+            <div class="" height="200" width="200">
+                <img src="~/ProfileImages/@Model.Host.ProfileImage"
+                     alt="@hostName Profile Image"
+                     class="rounded-top-left" height="200" width="200">
+            </div>
 
-<div class="container card bg-light py-4 m-auto shadow border border-light rounded">
-    <h2 class="pb-2 lead">Meeting with @Model.Host.FirstName @Model.Host.LastName</h2>
-    <hr class="pb-4"/>
+            <div class="p-3 flex-fill text-center">
+                <p class="lead">Scheduling with @hostName</p>
+                <p>@Model.Host.Email
+                    @if(!String.IsNullOrEmpty(Model.Host.Phone))
+                    {
+                        <span> | @Model.Host.Phone</span>
+                    }
+                </p>
+            </div>
 
-    <div class="row justify-content-center">
+
+        </div>
+    </div>
+    <br />
+
+    <div class="row justify-content-center p-1">
         @*Left side: Calender*@
         <div class="col-md-5 pb-4">
-            <h6 class="pb-3">Date Selection:</h6>
             <ejs-calendar id="calendar"
                           min="minDate"
                           class="m-auto e-bigger"
@@ -40,8 +68,6 @@
         @*Right side: Time Selector*@
         <div class="col-md-7 px-4">
             @*Meeting Length Selector*@
-            <h6 class="pb-3">Duration:</h6>
-
             <div class="btn-group btn-group-toggle d-flex justify-content-center"
                  data-toggle="buttons"
                  for="durationSelection">
@@ -57,10 +83,10 @@
             </div>
 
             @*Time Selector*@
-            <h6 class="pt-4 pb-2">Time Slots:</h6>
+            <h6 class="pt-4 pb-2 px-2">Time Slots:</h6>
 
-            <div class="scrollable-height overflow-auto scrollbar-primary pr-1">
-                <form id="dateTimeForm" asp-controller="Appointment" asp-action="Schedule" method="post">
+            <div class="scrollable-height overflow-auto scrollbar-primary pr-2 pb-2">
+                <form id="dateTimeForm" asp-controller="Appointments" asp-action="Schedule" method="post">
                     <div class="row list-group w-95 m-0 text-center" id="timeslots">
                         @* Template
                         <a href="#" class="list-group-item list-group-item-action text-center">8:00 AM</a>
@@ -76,6 +102,7 @@
 
 <script>
     let model = null;
+    let hostId = null;
     let appointments = null;
     let availability = null;
     let timeslotsElem = null;
@@ -85,11 +112,14 @@
 
     window.onload = (event) => {
         model = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+        hostId = model.host.id;
         appointments = model.appointments;
-        availability = model.user.usersAvailability;
+        availability = model.host.hostAvailability;
         timeslotsElem = document.getElementById("timeslots");
         dateSelection = DateTime.now();
         renderTimeslots();
+
+        console.log(model);
     };
 
     function getDateSelection(args) {
@@ -152,8 +182,8 @@
         else {
             // Create hidden userId input
             let userIdInputElem = document.createElement("input");
-            userIdInputElem.setAttribute("name", "userId");
-            userIdInputElem.setAttribute("value", model.user.id);
+            userIdInputElem.setAttribute("name", "hostId");
+            userIdInputElem.setAttribute("value", hostId);
             userIdInputElem.setAttribute("hidden", "true");
             timeslotsElem.appendChild(userIdInputElem);
 
