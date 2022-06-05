@@ -20,10 +20,10 @@
         cursor: pointer;
         border-radius: 5px;
     }
-     
-    .timeslot:hover {
-        background-color: azure;
-    }
+
+        .timeslot:hover {
+            background-color: azure;
+        }
 
     .rounded-top-left {
         border-top-left-radius: 3px !important;
@@ -35,23 +35,22 @@
     <div class="card-header p-0 ">
         <div class="d-sm-flex">
             @*Profile Image*@
-            <div class="" height="200" width="200">
-                <img src="~/ProfileImages/@Model.Host.ProfileImage"
-                     alt="@hostName Profile Image"
-                     class="rounded-top-left" height="200" width="200">
+            <div class="d-flex justify-content-center">
+            <img src="~/ProfileImages/@Model.Host.ProfileImage"
+                 alt="@hostName Profile Image"
+                 class="align-self-center rounded-top-left" height="200" width="200">
             </div>
 
             <div class="p-3 flex-fill text-center">
                 <p class="lead">Scheduling with @hostName</p>
-                <p>@Model.Host.Email
-                    @if(!String.IsNullOrEmpty(Model.Host.Phone))
+                <p>
+                    @Model.Host.Email
+                    @if (!String.IsNullOrEmpty(Model.Host.Phone))
                     {
                         <span> | @Model.Host.Phone</span>
                     }
                 </p>
             </div>
-
-
         </div>
     </div>
     <br />
@@ -97,7 +96,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <script>
