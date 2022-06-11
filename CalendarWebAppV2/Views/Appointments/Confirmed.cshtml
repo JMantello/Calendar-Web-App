@@ -1,0 +1,28 @@
+﻿@model EnterDetailsVM;
+
+<div class="card text-white bg-success">
+    <div class="card-header">
+        <h2>
+            Confirmed appointment with @Model.Host.FirstName @Model.Host.LastName
+        </h2>
+    </div>
+
+    <div class="card-body shadow">
+        <div class="form-group">
+            <label class="control-label pt-1"><strong>Start time:</strong> @Model.DateTimeSelection.ToString("f")</label>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label"><strong>End time:</strong> @Model.EndTime.ToString("f")</label>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label"><strong>Duration:</strong> @Model.Duration minutes</label>
+        </div>
+
+        <div class="form-group">
+            <p>Thank you!</p>
+        </div>
+
+    </div>
+</div>

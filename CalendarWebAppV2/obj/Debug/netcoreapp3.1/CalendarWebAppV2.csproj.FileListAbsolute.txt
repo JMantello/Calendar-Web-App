@@ -156,3 +156,4 @@ C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAp
 C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\obj\Debug\netcoreapp3.1\Razor\Views\Appointments\Schedule.cshtml.g.cs
 C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\obj\Debug\netcoreapp3.1\Razor\Views\Hosts\Appointments.cshtml.g.cs
 C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\obj\Debug\netcoreapp3.1\Razor\Views\Hosts\Index.cshtml.g.cs
+C:\Users\jonat\Personal Documents\Coding Projects\Capstone Project\CalendarWebAppV2\CalendarWebAppV2\obj\Debug\netcoreapp3.1\Razor\Views\Appointments\Confirmed.cshtml.g.cs

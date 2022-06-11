@@ -1,55 +1,66 @@
 ﻿@model EnterDetailsVM;
 
-<h2>Scheduling An Appointment With @Model.Host.FirstName @Model.Host.LastName</h2>
-<form asp-action="EnterDetails" method="post">
-    <input hidden asp-for="HostId" />
-    <input hidden type="datetime" asp-for="DateTimeSelection" />
-    <input hidden asp-for="Duration" />
-
-    <div class="form-group">
-        <label class="control-label pt-1">Start time: @Model.DateTimeSelection.ToString("f")</label>
-    </div>
-    
-    <div class="form-group">
-        <label class="control-label">End time: @Model.EndTime.ToString("f")</label>
-    </div>
-    
-    <div class="form-group">
-        <label class="control-label">Duration: @Model.Duration minutes</label>
-    </div>
-    
-    <div class="form-group">
-        <label class="control-label">Your first name: </label>
-        <input asp-for="ParticipantFirstName" type="text" />
-        <span asp-validation-for="ParticipantFirstName" class="text-danger"></span>
-    </div>
-    
-    <div class="form-group">
-        <label class="control-label">Your last name (optional): </label>
-        <input asp-for="ParticipantLastName" type="text" />
-    </div>
-    
-    <div class="form-group">
-        <label class="control-label">Your email address: </label>
-        <input asp-for="ParticipantEmail" type="text" />
-        <span asp-validation-for="ParticipantEmail" class="text-danger"></span>
+<div class="card">
+    <div class="card-header">
+        <h2>Scheduling an appointment with @Model.Host.FirstName @Model.Host.LastName</h2>
     </div>
 
-    <div class="form-group">
-        <label class="control-label">Your phone number (optional): </label>
-        <input asp-for="ParticipantPhone" type="text" />
-    </div>
+    <div class="card-body shadow">
+        <form asp-action="EnterDetails" method="post">
+            <input hidden asp-for="HostId" />
+            <input hidden type="datetime" asp-for="DateTimeSelection" />
+            <input hidden asp-for="Duration" />
 
-    <div class="form-group">
-        <label class="control-label">Memo (Max 300 characters): </label>
-        <textarea asp-for="Memo" class="w-100" placeholder="Notes for the meeting..."></textarea>
-    </div>
+            <div class="form-group">
+                <label class="control-label pt-1"><strong>Start time:</strong> @Model.DateTimeSelection.ToString("f")</label>
+            </div>
 
-    <div class="form-group">
-        <input type="submit" value="Submit" class="btn btn-primary" />
+            <div class="form-group">
+                <label class="control-label"><strong>End time:</strong> @Model.EndTime.ToString("f")</label>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label"><strong>Duration:</strong> @Model.Duration minutes</label>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm">
+                    <label class="control-label">First name: </label>
+                    <input class="form-control" asp-for="ParticipantFirstName" type="text" placeholder="First name"/>
+                    <span asp-validation-for="ParticipantFirstName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group col-sm">
+                    <label class="control-label">Last name (optional): </label>
+                    <input class="form-control" asp-for="ParticipantLastName" type="text" placeholder="Last name"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Email address: </label>
+                <input class="form-control" asp-for="ParticipantEmail" type="text" placeholder="Email address"/>
+                <span asp-validation-for="ParticipantEmail" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Phone number (optional): </label>
+                <input class="form-control" asp-for="ParticipantPhone" type="text" placeholder="Phone number"/>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Memo (Max 300 characters): </label>
+                <textarea class="form-control" asp-for="Memo" rows="3" placeholder="Notes for the meeting..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
-</form>
+</div>
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

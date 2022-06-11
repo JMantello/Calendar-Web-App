@@ -7,7 +7,7 @@
 
 <style>
     .banner {
-        height: 300px;
+        height: 425px;
         background-image: url(../imgs/calendarPic1.jpg);
         background-position: center;
         background-repeat: no-repeat;
@@ -20,90 +20,14 @@
     <div class="banner"></div>
 
     @*App description*@
-    <div class="jumbotron ">
+    <div class="jumbotron">
         <h2 class="display-4">Calendar Bookings</h2>
         <p class="lead">A calendar-like management system for scheduling and maintaining appointments with multiple clients. Specify your availability and others will be able to book appointments within those times.</p>
-        <p>To get started with the demo, please click on a profile below to view their calendar.</p>
-        <hr class="my-4">
-        @*<a class="btn btn-primary btn-lg" role="button" asp-controller="Hosts" asp-action="Index">View Demo</a>*@
-        @*User Cards*@
-
-        @foreach (Hosts host in Model.Hosts)
-        {
-            @*User Card*@
-            <div class="card bg-light mb-3">
-                <div class="card-header">
-                    @*Tabs Nav*@
-                    <ul class="nav nav-tabs card-header-tabs" id="nav-tab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active"
-                           id="nav-profile-tab"
-                           data-toggle="tab"
-                           href="#nav-profile"
-                           role="tab"
-                           aria-controls="nav-profile"
-                           aria-selected="true">
-                                Profile
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link"
-                           id="nav-contact-tab"
-                           data-toggle="tab"
-                           href="#nav-availability"
-                           role="tab"
-                           aria-controls="nav-availability"
-                           aria-selected="false">
-                                Availabilty
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                @*Main Card Body*@
-                <div class="card-body">
-                    <div class="row no-gutters justify-content-between">
-                        @*Profile Image*@
-                        <div class="col-lg-3">
-                            <img src="~/ProfileImages/@host.ProfileImage"
-                             alt="@host.FirstName @host.LastName Profile Image"
-                             class="" height="200" width="200">
-                        </div>
-
-                        @*Tabbable card body content*@
-                        <div class="col-lg-9">
-                            <div class="tab-content" id="nav-tabContent">
-                                @*Tab 1 - Profile*@
-                                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-profile-tab">
-                                    <h5 class="card-title mb-1">
-                                        @host.FirstName @host.LastName
-                                        @if (!String.IsNullOrEmpty(@host.UniqueEndpoint))
-                                        {
-                                            <br />
-                                            <span class="card-text"><small class="text-muted">@@@host.UniqueEndpoint</small></span>
-                                        }
-                                    </h5>
-                                    <p class="card-text pt-2">
-                                        @host.Email
-                                        @if (!String.IsNullOrEmpty(@host.Phone))
-                                        {
-                                            <span class="card-text"> | @host.Phone</span>
-                                        }
-                                    </p>
-                                    <p class="card-text mt-2">@host.Bio</p>
-                                    <a class="btn btn-outline-primary" asp-controller="Appointments" asp-action="Schedule" asp-route-hostId="@host.Id">Schedule Appointment</a>
-                                </div>
-
-                                @*Tab 2 - Availability*@
-                                <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-availability-tab">
-                                    <p>Host's Availability</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-
+        <hr />
+        <p>To get started with the demo and view examples of users and their calendar, please click below.</p>
+        <a class="btn btn-primary" asp-controller="Hosts" asp-action="Index">View Demo</a>
     </div>
+
+    
+
 </div>

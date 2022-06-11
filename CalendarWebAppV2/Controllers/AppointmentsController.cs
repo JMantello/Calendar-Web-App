@@ -97,22 +97,7 @@ namespace CalendarWebAppV2.Controllers
 
             if (host == null) return NotFound();
 
-            // Create appointment
-            Appointments appointment = new Appointments();
-
-            DateTimeOffset appointmentStart = model.DateTimeSelection;
-            DateTimeOffset appointmentEnd = model.DateTimeSelection.AddMinutes(model.Duration);
-
-            appointment.Start = appointmentStart;
-            appointment.End = appointmentEnd;
-
-            if (!string.IsNullOrEmpty(model.Memo))
-            {
-                appointment.Memo = model.Memo;
-            }
-
-            // Add appointment
-            context.Appointments.Add(appointment);
+            model.Host = host;
 
             // Would like to get participant if existing user
 
@@ -132,32 +117,44 @@ namespace CalendarWebAppV2.Controllers
                 participant.Phone = model.ParticipantPhone;
             }
 
-            // Add participant
-            context.Participants.Add(participant);
+            // Create appointment
+            Appointments appointment = new Appointments();
+
+            DateTimeOffset appointmentStart = model.DateTimeSelection;
+            DateTimeOffset appointmentEnd = model.DateTimeSelection.AddMinutes(model.Duration);
+
+            appointment.Start = appointmentStart;
+            appointment.End = appointmentEnd;
+
+            if (!string.IsNullOrEmpty(model.Memo))
+            {
+                appointment.Memo = model.Memo;
+            }
 
             // Create AppointmentHost
             AppointmentHosts ah = new AppointmentHosts();
             ah.AppointmentId = appointment.Id;
             ah.HostId = host.Id;
 
-            // Add AppointmentHost
-            context.AppointmentHosts.Add(ah);
-
             // Create AppointmentParticipant
             AppointmentParticipants ap = new AppointmentParticipants();
             ap.AppointmentId = appointment.Id;
-            ap.ParticipantId = host.Id;
+            ap.ParticipantId = participant.Id;
 
-            // Add AppointmentParticipant
-            context.AppointmentParticipants.Add(ap);
+            // Add items to appointment
+            appointment.AppointmentHosts.Add(ah);
+            appointment.AppointmentParticipants.Add(ap);
 
-            // Return Confirmation Page
-            // Cool idea is to put a bool 'justCreated' to the model,
-            // Then if (justCreated) put a little bootstrap popup that
-            // Says 'Appointment Confirmed' or something on the next page.
-            // The next page would be an appointment details page.
-            // Or, could just go to a confirm page.
-            return Json(model);
+            // Add participant
+            context.Participants.Add(participant);
+            
+            // Add appointment to Db
+            context.Appointments.Add(appointment);
+
+            // Save Db
+            context.SaveChanges();
+
+            return View("Confirmed", model);
         }
 
     }
