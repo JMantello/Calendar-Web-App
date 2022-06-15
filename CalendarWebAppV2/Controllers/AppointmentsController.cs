@@ -117,6 +117,10 @@ namespace CalendarWebAppV2.Controllers
                 participant.Phone = model.ParticipantPhone;
             }
 
+            // Add participant
+            context.Participants.Add(participant);
+            context.SaveChanges();
+
             // Create appointment
             Appointments appointment = new Appointments();
 
@@ -131,6 +135,10 @@ namespace CalendarWebAppV2.Controllers
                 appointment.Memo = model.Memo;
             }
 
+            // Add appointment to Db
+            context.Appointments.Add(appointment);
+            context.SaveChanges();
+
             // Create AppointmentHost
             AppointmentHosts ah = new AppointmentHosts();
             ah.AppointmentId = appointment.Id;
@@ -141,17 +149,11 @@ namespace CalendarWebAppV2.Controllers
             ap.AppointmentId = appointment.Id;
             ap.ParticipantId = participant.Id;
 
-            // Add items to appointment
-            appointment.AppointmentHosts.Add(ah);
-            appointment.AppointmentParticipants.Add(ap);
+            // Add items to database
+            context.AppointmentHosts.Add(ah);
+            context.SaveChanges();
 
-            // Add participant
-            context.Participants.Add(participant);
-            
-            // Add appointment to Db
-            context.Appointments.Add(appointment);
-
-            // Save Db
+            context.AppointmentParticipants.Add(ap);
             context.SaveChanges();
 
             return View("Confirmed", model);
