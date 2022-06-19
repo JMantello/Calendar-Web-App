@@ -1,13 +1,13 @@
 ﻿@model EnterDetailsVM;
 
-<div class="card text-white bg-success">
+<div class="card shadow shadow-sm">
     <div class="card-header">
         <h2>
-            Confirmed appointment with @Model.Host.FirstName @Model.Host.LastName
+            Confirmed appointment!
         </h2>
     </div>
 
-    <div class="card-body shadow">
+    <div class="card-body">
         <div class="form-group">
             <label class="control-label pt-1"><strong>Start time:</strong> @Model.DateTimeSelection.ToString("f")</label>
         </div>
@@ -21,7 +21,7 @@
         </div>
 
         <div class="form-group">
-            <p>Thank you!</p>
+            <h5>Thank you!</h5>
         </div>
 
     </div>
