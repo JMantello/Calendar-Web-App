@@ -3,10 +3,10 @@ Version 2 of my Capstone Project, based off of scheduling applications like Cale
 
 "A calendar-like management system for scheduling and maintaining appointments with multiple clients. Specify your availability and others will be able to book appointments within those times."
 
-.NET Core 3 MVC project
-'Database first' approach using SQL Server and Entity Framework
-Syncfusion EJ2 Calendar Component
-Luxon.js
+.NET Core 3 MVC project.
+Database first approach using SQL Server and Entity Framework,
+Syncfusion EJ2 Calendar component,
+Luxon.js.
 
 Screenshots of the user experience:
 
