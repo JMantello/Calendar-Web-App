@@ -1,5 +1,5 @@
 # Calendar-Web-App
-Version 2 of my Capstone Project, based off of scheduling applications like Calendly and Hubspot.
+Version 2 of my Capstone Project, based on scheduling applications like Calendly and Hubspot.
 
 "A calendar-like management system for scheduling and maintaining appointments with multiple clients. Specify your availability and others will be able to book appointments within those times."
 
